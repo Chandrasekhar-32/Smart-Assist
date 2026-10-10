@@ -1,5 +1,12 @@
 
-const BASE = (import.meta.env.VITE_API_URL || 'https://smart-assist-rbxl.onrender.com').replace(/\/$/, '')
+
+const normalizedPath = path.startsWith('/api/')
+  ? path
+  : path === '/predict'
+    ? path
+    : `/api${path.startsWith('/') ? path : `/${path}`}`
+
+const url = `${BASE}${normalizedPath}`
 
 function token() {
   return localStorage.getItem('smartassist_token')
