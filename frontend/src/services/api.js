@@ -31,7 +31,6 @@ async function request(path, { method = 'GET', body, auth = true } = {}) {
     headers.Authorization = `Bearer ${token()}`
   }
 
-  // Add /api to normal backend routes, but not /predict
   const normalizedPath = path.startsWith('/api/')
     ? path
     : path === '/predict'
