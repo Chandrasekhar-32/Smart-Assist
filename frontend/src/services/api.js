@@ -1,4 +1,5 @@
-const BASE = '/api'
+
+const BASE = (import.meta.env.VITE_API_URL || 'https://smart-assist-rbxl.onrender.com').replace(/\/$/, '')
 
 function token() {
   return localStorage.getItem('smartassist_token')
@@ -19,26 +20,37 @@ export function getUser() {
 
 async function request(path, { method = 'GET', body, auth = true } = {}) {
   const headers = { 'Content-Type': 'application/json' }
-  if (auth && token()) headers.Authorization = `Bearer ${token()}`
-  const res = await fetch(path.startsWith('/api') || path.startsWith('/predict') ? path : BASE + path, {
+
+  if (auth && token()) {
+    headers.Authorization = `Bearer ${token()}`
+  }
+
+  const url = `${BASE}${path.startsWith('/') ? path : `/${path}`}`
+
+  const res = await fetch(url, {
     method,
     headers,
     body: body !== undefined ? JSON.stringify(body) : undefined,
   })
+
   let data = null
+
   try {
     data = await res.json()
   } catch {
     data = null
   }
+
   if (!res.ok) {
     const message = Array.isArray(data?.detail)
       ? data.detail.map((d) => d.msg).join(', ')
       : data?.detail || `Request failed (${res.status})`
+
     const err = new Error(message)
     err.status = res.status
     throw err
   }
+
   return data
 }
 
