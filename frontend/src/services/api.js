@@ -1,20 +1,19 @@
 
-
-const normalizedPath = path.startsWith('/api/')
-  ? path
-  : path === '/predict'
-    ? path
-    : `/api${path.startsWith('/') ? path : `/${path}`}`
-
-const url = `${BASE}${normalizedPath}`
+const BASE = (
+  import.meta.env.VITE_API_URL ||
+  'https://smart-assist-rbxl.onrender.com'
+).replace(/\/$/, '')
 
 function token() {
   return localStorage.getItem('smartassist_token')
 }
 
 export function setUser(user) {
-  if (user) localStorage.setItem('smartassist_user', JSON.stringify(user))
-  else localStorage.removeItem('smartassist_user')
+  if (user) {
+    localStorage.setItem('smartassist_user', JSON.stringify(user))
+  } else {
+    localStorage.removeItem('smartassist_user')
+  }
 }
 
 export function getUser() {
@@ -32,7 +31,14 @@ async function request(path, { method = 'GET', body, auth = true } = {}) {
     headers.Authorization = `Bearer ${token()}`
   }
 
-  const url = `${BASE}${path.startsWith('/') ? path : `/${path}`}`
+  // Add /api to normal backend routes, but not /predict
+  const normalizedPath = path.startsWith('/api/')
+    ? path
+    : path === '/predict'
+      ? path
+      : `/api${path.startsWith('/') ? path : `/${path}`}`
+
+  const url = `${BASE}${normalizedPath}`
 
   const res = await fetch(url, {
     method,
