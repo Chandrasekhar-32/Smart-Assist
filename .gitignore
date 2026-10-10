@@ -1,0 +1,37 @@
+# dependencies
+frontend/node_modules/
+backend/.venv/
+
+# build output
+frontend/dist/
+
+# runtime / caches
+__pycache__/
+*.pyc
+.pytest_cache/
+frontend/logs/
+backend/logs/
+backend/data/*.db
+
+# editors
+.DS_Store
+# Environment secrets
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# Python
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Node.js
+node_modules/
+dist/
+
+# Local development
+.DS_Store
